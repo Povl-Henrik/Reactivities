@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] // ie: controllernavnet er det før ordet Controller (c vs C ??)
     public class BaseApiController : ControllerBase
     {
         

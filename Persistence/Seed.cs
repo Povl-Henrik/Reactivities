@@ -11,10 +11,11 @@ namespace Persistence
         public static async Task SeedData(DataContext context)
         {
             if (context == null || context.Activities == null) {
-                return; // Det var det med null :-(
+                return; // Et ret grim fix af hans lidt løse forhold til null
             }
             
             if (context.Activities.Any()) return;
+            
             
             var activities = new List<Activity>
             {

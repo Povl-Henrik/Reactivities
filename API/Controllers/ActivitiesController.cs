@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> getActivities() 
+        public async Task<ActionResult<List<Activity>>> GetActivities()
         {
             if (_context.Activities == null) {
                 throw new Exception("_context.Activities == null");
@@ -27,7 +27,7 @@ namespace API.Controllers
             return await _context.Activities.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] // activities/id
         public async Task<ActionResult<Activity?>> GetActivity(Guid id) 
         {
             if (_context.Activities == null) {
