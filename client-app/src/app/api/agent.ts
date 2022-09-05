@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Activity } from '../models/activity';
 
 const sleep= (delay: number) => {
@@ -33,7 +33,7 @@ const Activities= {
     list: () => requests.get<Activity[]>('/activities'),
     details: (id: string) => requests.get<Activity>(`/activities/${id}`), // Bemærk ` i stedet for ', så kan man lave den der $-substitution
     create: (activity: Activity) => requests.post<void>('/activities', activity),
-    update: (activity: Activity) => { console.log(activity.venue); return axios.put(`/activities/${activity.id}`, activity)},
+    update: (activity: Activity) => { console.log(activity.venue); return requests.put(`/activities/${activity.id}`, activity)},
     delete: (id: string) => requests.del<void>(`/activities/${id}`)
 }
 
