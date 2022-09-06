@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
-import {v4 as uuid} from 'uuid';
 
 export default class ActivityStore {
     activityRegistry= new Map<string, Activity>();
@@ -14,7 +13,7 @@ export default class ActivityStore {
         /* den pæne måde
            makeObservable(this, {
               title: observable,
-              setTitle: action // fordi setTitle er erklæret i Lambda-notation, er den automatisk bound?? Ellers skulle der stå: setTitle: action.bound
+              setTitle: action // fordi setTitle er erklæret i Lambda-notation, er den automatisk bound. Ellers skulle der stå: setTitle: action.bound
                                // bound? Så må man bruge this til at tilgå state
           });
         Den nemme måde */
@@ -27,14 +26,14 @@ export default class ActivityStore {
     }
 
     loadActivities= async () => { // Man må ikke ændre state i en async metode uden at kalde en action, der gør det eller wrappe i runInAction
-        //this.setLoadingInitial(true);
+        this.setLoadingInitial(true);
         try {
             const activities= await agent.Activities.list();
-            activities.forEach(activity => { 
-              activity.date= activity.date.split('T')[0];
-              //this.activities.push(activity);
-              this.activityRegistry.set(activity.id, activity);
-            });
+            runInAction(() => { // Ikke længere fornøden, ændring af state flyttet til egen action
+                activities.forEach(activity => { 
+                  this.setActivity(activity);
+                });
+            })
         } catch (error) {
             console.log(error);
         } finally {
@@ -42,33 +41,47 @@ export default class ActivityStore {
         }
     }
 
+
+    loadActivity= async (id: string) => {
+        let activity= this.getActivity(id);
+        if (activity) {
+            this.selectedActivity= activity;
+            return activity;
+        } else {
+            this.loadingInitial= true;
+            try {
+                activity= await agent.Activities.details(id);
+                this.setActivity(activity);
+                runInAction(() => {
+                    this.selectedActivity= activity;
+                });
+                return activity;
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.setLoadingInitial(false);
+            }
+        }
+    }
+
+    private setActivity= (activity: Activity) => {
+        activity.date= activity.date.split('T')[0];
+        //this.activities.push(activity);
+        this.activityRegistry.set(activity.id, activity);
+    }
+
+    private getActivity= (id: string) => {
+        return this.activityRegistry.get(id);
+    }
+
     setLoadingInitial= (state: boolean) => {
         this.loadingInitial= state;
     }
 
-    selectActivity= (id: string) => {
-        // this.selectedActivity= this.activities.find(a => a.id = id);
-        this.selectedActivity= this.activityRegistry.get(id);
-    }
-
-    cancelSelectedActivity= () => {
-        this.selectedActivity= undefined;
-    }
-
-    openForm= (id?: string) => {
-        id ? this.selectActivity(id) : this.cancelSelectedActivity();
-        this.editMode= true;
-    }
-
-    closeForm= () => {
-        this.editMode= false;
-    }
-
+    
 
     createActivity= async (activity: Activity) => {
         this.loading= true;
-        activity.id= uuid();
-
         try {
            await agent.Activities.create(activity);
            runInAction(() => {
@@ -116,9 +129,11 @@ export default class ActivityStore {
             runInAction(() => {
                 //this.activities= [...this.activities.filter(a => a.id !== id)];
                 this.activityRegistry.delete(id);
+                /*
                 if (this.selectedActivity?.id === id) { // this.selectedActivity? !== this.selectedActivity! Hvis selectedActivity er undefined stopper evalueringen
                     this.cancelSelectedActivity();
                 }
+                */
                 this.loading= false;
             })
         } catch(error) {

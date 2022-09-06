@@ -1,16 +1,28 @@
 
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Grid, List } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
-import ActivityDetails from '../details/ActivityDetails';
-import ActivityForm from '../form/ActivityForm';
 import ActivityList from './ActivityList';
 
 
 export default observer(function ActivityDashboard() { // Destructuring Props.activities
     
     const {activityStore}= useStore();
-    const {selectedActivity, editMode}= activityStore;
+    const {loadActivities, activityRegistry}= activityStore; // Så hellere lade loadActivities lave det chesk :-(
+
+    useEffect(() => {                                  // React Hook (effect)
+      if (activityRegistry.size <= 1) { // Ikke ""=== 0)" for man kunne komme her efter at have viewet en enkeltaktivitet - og der er jo mere end 1 aktivitet :-(
+        loadActivities();               // hvad med en hasLoaded egenskab i activityStore? Der så kunne få ansvaret :-(
+      }
+    }, [activityRegistry.size, loadActivities]) // Array of dependencies. Tomt, så det sker præcist en gang efter load. Ellers ville effect-hook fyre igen efter nyt layout, og lave en loop
+                        // nu lidt mindre tomt
+  
+    
+    if (activityStore.loadingInitial) return <LoadingComponent content='Loading app'/>
+  
+  
 
     return (
         <Grid>
@@ -20,16 +32,7 @@ export default observer(function ActivityDashboard() { // Destructuring Props.ac
                 </List>
             </Grid.Column>
             <Grid.Column width='6'>
-                { selectedActivity && !editMode &&
-                                   // Fortsætter kun, hvis activities[0] (Eller nu selectedActivity) ikke er null. 
-                                   // Det er den ved første layout. Derefter hentes activities og der layes out igen
-                                   // Nu er den så undefined indtil der selectes en Activity
-                     <ActivityDetails/>
-                }
-                { editMode &&
-                      <ActivityForm
-                      />
-                }
+                <h2>Activity filters</h2>
             </Grid.Column>
         </Grid>
     )
