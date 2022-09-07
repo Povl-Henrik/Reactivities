@@ -20,7 +20,7 @@ function App() { // Returnerer JSX
           render= {() => (
           <>
             <NavBar/>
-            <Container style={{marginTop: '7em'}}> Margin top er 7em, ellers bliver de første aktiviteter gemt af navbar :-(
+            <Container style={{marginTop: '7em'}}> Margin top er 7em, ellers bliver de første aktiviteter gemt under navbar :-(
               <Route exact path='/activities' component={ActivityDashboard} /> {/* http://localhost:3000/activities */}
               <Route path='/activities/:id' component={ActivityDetails} />
               <Route key= {location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
