@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
     public class Activity
     {
         public Guid Id { get; set; }
+
+        //[Required] //- Dårlig stil, vil han mene
         public string? Title { get; set; }
         public DateTime Date { get; set; }
         public string? Description { get; set; }

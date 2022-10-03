@@ -13,7 +13,7 @@ namespace API.Extensions
 {
     public static class ApplicationServiceExtensions
     {
-        // static fordi det skal extension methods være, this fordi vi extender IServiceCollection
+        // static fordi det skal extension methods være, 'this' fordi vi extender IServiceCollection services
         public static IServiceCollection AddApplicationServices(this IServiceCollection services,
                IConfiguration config) {
             services.AddSwaggerGen(c =>
