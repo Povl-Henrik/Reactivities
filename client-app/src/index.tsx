@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './app/layout/styles.css';
-import 'react-toastify/dist/ReactToastify.min.css'
+import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import 'react-calendar/dist/Calendar.css';
 import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
@@ -14,7 +15,7 @@ export const history= createBrowserHistory();
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(
+root.render(  // Giver det samme som ReactDOM.render (...)
   // -- Han kan ikke lide det :-( <React.StrictMode> 
   <StoreContext.Provider value={store}>
     <Router history= {history}>

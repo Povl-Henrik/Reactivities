@@ -26,11 +26,12 @@ function App() { // Returnerer JSX
           <>
             <NavBar />
             <Container style={{ marginTop: '7em' }}> Margin top er 7em, ellers bliver de første aktiviteter gemt under navbar :-(
-              <Switch> {/* Så vises præcist en af nedenstående - den første, der matcher path */}
+              <Switch> {/* Så vises præcist en af nedenstående - den første, der matcher path. Outdated i React Route 6. Blev det default?  */}
                 <Route exact path='/activities' component={ActivityDashboard} /> {/* http://localhost:3000/activities */}
                 <Route path='/activities/:id' component={ActivityDetails} />
                 <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
-                <Route path='/errors' component={TestErrors} />
+                {/* Pre 5.1 style <Route path='/errors' component={TestErrors} /> */}
+                <Route path='/errors'><TestErrors/></Route>               
                 <Route path='/server-error' component={ServerError} />
                 <Route component={NotFound} />
               </Switch>

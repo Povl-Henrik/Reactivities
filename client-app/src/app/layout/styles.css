@@ -13,7 +13,11 @@ body {
   border: none;
   box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
 }
-
+/* Løste et problem i hans version af etellerandet
+.react-datepicker-wrapper {
+  width: 100%;
+}
+*/
 .masthead {
   display: flex;
   align-items: center;

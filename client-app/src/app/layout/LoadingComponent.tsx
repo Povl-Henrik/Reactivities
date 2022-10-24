@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function LoadingComponent({inverted= true, content= 'Loading ...'}: Props) {
-    return (
+    return ( // Loaders are hidden unless has prop active or inside an Dimmer active
         <Dimmer active={true} inverted={inverted}>
             <Loader content={content}/>
         </Dimmer>
